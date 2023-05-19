@@ -2,6 +2,10 @@ import argparse
 import os
 from modules.paths_internal import models_path, script_path, data_path, extensions_dir, extensions_builtin_dir, sd_default_config, sd_model_file
 
+
+
+negative_default = 'text, letters, logo, brand, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck'
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-f", action='store_true', help=argparse.SUPPRESS)  # allows running as root; implemented outside of webui
@@ -103,3 +107,21 @@ parser.add_argument("--skip-version-check", action='store_true', help="Do not ch
 parser.add_argument("--no-hashing", action='store_true', help="disable sha256 hashing of checkpoints to help loading performance", default=False)
 parser.add_argument("--no-download-sd-model", action='store_true', help="don't download SD1.5 model even if no model is found in --ckpt-dir", default=False)
 parser.add_argument('--subpath', type=str, help='customize the subpath for gradio, use with reverse proxy')
+
+
+# SD-CN args
+if True:
+    parser.add_argument('--input', required=True, help='Path to video file')
+    parser.add_argument('--output', required=True, help='Path to output video file')
+    parser.add_argument('--height', type=int, required=True, help='Output video height')
+    parser.add_argument('--width', type=int, required=True, help='Output video width')
+    parser.add_argument('--processing-strength', type=float, default=0.85,
+                                        help='Strength of postprocessing (0 to 1 range)')
+    parser.add_argument('--denoising-strength', type=float, default=0.15,
+                                            help='Strength of denoising (0 to 1 range)')
+    parser.add_argument('--prompt', default='', help='Prompt for stable diffusion')
+    parser.add_argument('--negative-prompt', default=negative_default, help='Negative prompt for stable diffusion')
+    parser.add_argument('--seed', type=int, help='Seed to initialize diffusion process')
+    parser.add_argument('--sampler', default='Euler a', help='Sampler algorithm to use')
+    parser.add_argument('--sampling-steps', type=int, default=15,
+                                    help='Number of sampling steps (1 to 150 range)', choices=list(range(1, 151)))
